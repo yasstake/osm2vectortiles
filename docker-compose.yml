@@ -100,6 +100,12 @@ export-list:
    - ./open-streets.tm2source:/data/tm2source
   links:
    - pgbouncer:db
+export-geonames:
+  image: "osm2vectortiles/export-geonames"
+  volumes:
+   - ./export:/data
+  links:
+   - postgis:db
 serve:
   image: "klokantech/tileserver-mapnik"
   volumes:
