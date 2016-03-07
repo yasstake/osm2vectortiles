@@ -27,7 +27,7 @@ function export_tsv() {
 }
 
 function export_geonames() {
-    export_tsv "places.tsv" "places.sql"
+    export_tsv "roads.tsv" "roads.sql"
 }
 
 export_geonames
