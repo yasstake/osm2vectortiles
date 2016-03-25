@@ -1,15 +1,15 @@
 pgdata:
   image: "tianon/true"
   volumes:
-  - /var/lib/postgresql/data
+  - ./postgresql/data:/var/lib/postgresql/data
 cache:
   image: "tianon/true"
   volumes:
-  - /data/cache
+  - ./data/cache:/data/cache
 postgis:
   image: "osm2vectortiles/postgis"
-  volumes_from:
-   - pgdata
+  volumes:
+   - ./postgresql/data:/var/lib/postgresql/data
   ports:
    - "5432"
 pgbouncer:
@@ -89,7 +89,7 @@ export:
   links:
    - pgbouncer:db
   environment:
-    BBOX: "8.4375 46.07323062540838 9.84375 47.040182144806664"
+    BBOX: "139.00 34.0 142.0 36.0"
     MIN_ZOOM: "8"
     MAX_ZOOM: "14"
 export-list:
