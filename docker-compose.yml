@@ -12,6 +12,10 @@ postgis:
    - ./postgresql/data:/var/lib/postgresql/data
   ports:
    - "5432"
+smrender:
+  build: src/smrender
+  links:
+    - import-osm:imposm
 pgbouncer:
   image: "osm2vectortiles/pgbouncer"
   links:
