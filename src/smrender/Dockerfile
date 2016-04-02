@@ -1,8 +1,25 @@
-FROM ubuntu:latest
+M ubuntu:latest
 
-RUN apt-get update -y && apt-get install -y xz-utils make gcc pkg-config fontconfig libcairo* libgtk2.0-dev libglib2.0-dev automake autotools-dev wget emacs
+RUN apt-get update -y && apt-get install -y xz-utils make gcc pkg-config fontconfig libcairo* libgtk2.0-dev l
+ibglib2.0-dev automake autotools-dev wget emacs make unzip
 
-RUN cd /tmp && wget http://www.abenteuerland.at/download/smrender/current/smrender-4.0.r1854.tar.xz &&  xzcat smrender-4.0.r1854.tar.xz | tar xvf - && cd smrender-4.0.r1854 && sed -i -e "1i #include<glib.h>"  src/smrender_dev.h
+RUN cd /tmp && wget http://www.abenteuerland.at/download/smrender/current/smrender-4.0.r1854.tar.xz &&  xzcat
+ smrender-4.0.r1854.tar.xz | tar xvf - && cd smrender-4.0.r1854 && sed -i -e "1i #include<glib.h>"  src/smren
+der_dev.h
 
 RUN (export LDFLAGS=-lglib-2.0;cd /tmp/smrender-4.0.r1854;./configure --;make;make install)
+
+ADD rules/rules.osm /
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository -y ppa:webupd8team/java && \
+    apt-get update && \
+    apt-get install -y oracle-java8-installer
+
+RUN cd /tmp && wget http://bretth.dev.openstreetmap.org/osmosis-build/osmosis-latest.zip && cd /usr/local/ &&
+ unzip /tmp/osmosis-latest.zip
+
 
