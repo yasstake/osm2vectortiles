@@ -17,5 +17,13 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
     apt-get install -y oracle-java8-installer
 
 RUN cd /tmp && wget http://bretth.dev.openstreetmap.org/osmosis-build/osmosis-latest.zip && cd /usr/local/ && unzip /tmp/osmosis-latest.zip
+ADD Makefile /
+ADD run.sh /
+
+CMD /run.sh
+
+
+
+
 
 

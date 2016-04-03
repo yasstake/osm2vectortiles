@@ -10,7 +10,7 @@
 #
 #
 
-DATADIR=/data/import/
+DATADIR=/import/
 
 WORKDIR = $(DATADIR)/WORK
 
@@ -27,20 +27,21 @@ FISH_RIGHT_OSM=$(WORKDIR)/fish.osm
 FISH_RIGHT_PBF=$(DATADIR)/fish.pbf
 JAPAN_FILTER_PBF=$(DATADIR)/japan.mergefilter.pbf
 
-all: $(JAPAN_FILTER_PBF) $(FISH_RIGHT_PBF)
+all: $(JAPAN_FILTER_PBF) $(FISH_RIGHT_PBF) $(WORKDIR) 
 
-workdir:
+$(WORKDIR):
 	mkdir -p $(WORKDIR)
 
-download-pbf: 
+$(ORGPBF):
 	wget  http://download.geofabrik.de/asia/japan-latest.osm.pbf -O $(ORGPBF)
 
-clipdata:
+clipdata: $(ORGPBF) 
 	osmosis --read-pbf $(ORGPBF) --bounding-box bottom=35 top=36 left=139 right=140 --write-pbf $(RAWPBF)
 
-alldata:
+alldata: $(ORGPBF)
 	cp $(ORGPBF) $(RAWPBF)
 
+$(RAWPBF): clipdata
 
 $(JAPAN_SEA_PBF):	$(RAWPBF) $(WORKDIR)
 	osmosis --read-pbf $(RAWPBF) \
@@ -49,7 +50,7 @@ $(JAPAN_SEA_PBF):	$(RAWPBF) $(WORKDIR)
 		--tf accept-relations seamark:type=* \
 		--write-pbf file=$(JAPAN_SEA_PBF)
 
-$(JAPAN_LAND_PBF):	$(RAWPBF) $(WORKDIR)
+$(JAPAN_LAND_PBF):	$(RAWPBF) $(WORKDIR) 
 	osmosis --read-pbf $(RAWPBF) \
 		--tf reject-ways seamark:type=*	\
 		--tf reject-node seamark:type=*	\
@@ -62,12 +63,11 @@ $(MERGE_SEA_OSM): $(ORG_SEA_PBF) $(JAPAN_SEA_PBF) $(WORKDIR)
 		--merge \
 		--write-xml file=$(MERGE_SEA_OSM)
 
-$(ORG_SEA_PBF):
+$(ORG_SEA_PBF): $(WORKDIR)
 	wget https://github.com/yasstake/osmlight/raw/master/SEAMAPDATA/seafilter.pbf -O $(ORG_SEA_PBF)
 
 $(JAPAN_FILTER_PBF): $(MERGE_SEA_OSM)
-	smrender -r /rules.osm -i $(MERGE_SEA_OSM) -G -M -w $(JAPAN_FILTER_PBF)
-
+	smrender -r /rules.osm -i $(MERGE_SEA_OSM) -G -M -w /dev/stdout | osmosis --read-xml file=- --write-pbf $(JAPAN_FILTER_PBF)
 
 $(FISH_RIGHT_OSM):
 	wget https://github.com/yasstake/ksj2osm/raw/master/fish.osm -O $(FISH_RIGHT_OSM)
