@@ -14,8 +14,19 @@ postgis:
    - "5432"
 smrender:
   build: src/smrender
+  volumes:
+   - ./import:/import
   links:
     - import-osm:imposm
+imposm2:
+  build: src/imposm2
+  command: ./import-pbf.sh
+  volumes:
+   - ./import:/data/import
+  volumes_from:
+   - cache
+  links:
+   - postgis:db
 pgbouncer:
   image: "osm2vectortiles/pgbouncer"
   links:
