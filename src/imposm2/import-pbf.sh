@@ -19,6 +19,7 @@ readonly PG_CONNECT="postgis://$OSM_USER:$OSM_PASSWORD@$DB_HOST/$OSM_DB"
 
 function import_pbf() {
     local pbf_file="$1"
+    echo "$pbf_file"
     imposm -m imposm_sea.py --merge-cache --cache-dir="$IMPOSM_CACHE_DIR" --read "$pbf_file"
 }
 
@@ -28,7 +29,6 @@ function main() {
         local pbf_file
         for pbf_file in "$IMPORT_DATA_DIR"/*.pbf; do
             import_pbf "$pbf_file"
-            break
         done
     else
         echo "No PBF files for import found."

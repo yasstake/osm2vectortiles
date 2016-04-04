@@ -16,8 +16,6 @@ smrender:
   build: src/smrender
   volumes:
    - ./import:/import
-  links:
-    - import-osm:imposm
 imposm2:
   build: src/imposm2
   command: ./import-pbf.sh
