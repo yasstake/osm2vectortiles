@@ -582,7 +582,6 @@ lights = Points(
   },
   fields = (
     ('seamark:name', String()),
-    ('seamark:light:character', String()),
     ('seamark:light:colour', String()),
     ('seamark:light:sequence', String()),
     ('seamark:light:period', String()),
