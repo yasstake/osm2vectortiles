@@ -512,7 +512,7 @@ beacons = Points(
     ('seamark:topmark:shape', String()),
     ('seamark:topmark:colour', String()),
     ('seamark:fixme', String()),
-    ('seamark:light_character', String(),
+    ('seamark:light_character', String()),
   )
 )
 
@@ -565,7 +565,7 @@ buoys = Points(
     ('seamark:topmark:colour', String()),
     ('seamark:light:colour', String()),
     ('seamark:fixme', String()),
-    ('seamark:light_character', String(),
+    ('seamark:light_character', String()),
   )
 )
 
@@ -600,7 +600,7 @@ lights = Points(
     ('seamark:topmark:shape', String()),
     ('seamark:topmark:colour', String()),
     ('seamark:fixme', String()),
-    ('seamark:light_character', String(),
+    ('seamark:light_character', String()),
     )
 )
 
@@ -619,7 +619,7 @@ light_arc = LineStrings (
         ('seamark:light:sector_nr', String()),
         ('seamark:light_arc', String()),
         ('seamark:light_radial', Integer()),
-        ('seamark:light_character', String(),
+        ('seamark:light_character', String()),
     )
 )
 

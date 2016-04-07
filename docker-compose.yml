@@ -124,7 +124,7 @@ import-sql:
   links:
    - postgis:db
 mapbox-studio:
-  image: "osm2vectortiles/mapbox-studio"
+  build: tools/mapbox-studio
   volumes:
    - ./open-streets.tm2source:/projects/open-streets.tm2source
   links:
