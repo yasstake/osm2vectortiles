@@ -2,7 +2,7 @@
    <tag k='seamark:type' v=''/>
    <tag 
       k='_action_'
-      v='vsector@libsmfilter.so:r=0.5,d=20,a=0.05,'
+      v='vsector@libsmfilter.so:r=0.5,d=20,a=0.05'
    />
 </node>
 <node>

@@ -37,6 +37,9 @@ function main() {
     fi
 }
 
+rm -f $IMPOSM_CACHE_DIR/*.cache
+
+
 main
 
 imposm --connection "$PG_CONNECT" -m imposm_sea.py \
