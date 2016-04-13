@@ -25,6 +25,8 @@ function import_pbf() {
 
 
 function main() {
+    rm -f $IMPOSM_CACHE_DIR/*.cache
+
     if [ "$(ls -A $IMPORT_DATA_DIR/*.pbf 2> /dev/null)" ]; then
         local pbf_file
         for pbf_file in "$IMPORT_DATA_DIR"/*.pbf; do
@@ -36,9 +38,6 @@ function main() {
         exit 404
     fi
 }
-
-rm -f $IMPOSM_CACHE_DIR/*.cache
-
 
 main
 
