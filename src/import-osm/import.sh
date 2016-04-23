@@ -26,7 +26,7 @@ function import_pbf() {
     local pbf_file="$1"
     imposm3 import \
         -connection "$PG_CONNECT" \
-        -mapping "$MAPPING_YAML" \
+        -mapping "$MAPPING_JSON" \
         -overwritecache \
         -cachedir "$IMPOSM_CACHE_DIR" \
         -read "$pbf_file" \
@@ -34,7 +34,7 @@ function import_pbf() {
         -write -optimize -diff
 
     local timestamp=$(extract_timestamp "$pbf_file")
-    update_timestamp "$timestamp"
+#    update_timestamp "$timestamp"
 }
 
 function extract_timestamp() {

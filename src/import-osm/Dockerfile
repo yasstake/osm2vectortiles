@@ -1,5 +1,7 @@
 FROM golang:1.4
 
+RUN apt-get update && apt-get install -y emacs
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       libprotobuf-dev \
@@ -29,7 +31,8 @@ RUN apt-get purge -y --auto-remove \
 VOLUME /data/import /data/cache
 ENV IMPORT_DATA_DIR=/data/import \
     IMPOSM_CACHE_DIR=/data/cache \
-    MAPPING_YAML=/usr/src/app/mapping.yml
+    MAPPING_YAML=/usr/src/app/mapping.yml \
+    MAPPING_JSON=/usr/src/app/mapping.json
 
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app/

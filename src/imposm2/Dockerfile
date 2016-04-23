@@ -10,8 +10,7 @@ RUN pip install imposm
 VOLUME /data/import /data/cache
 
 ENV IMPORT_DATA_DIR=/data/import \
-    IMPOSM_CACHE_DIR=/data/cache \
-    MAPPING_YAML=/usr/src/app/mapping.yml
+    IMPOSM_CACHE_DIR=/data/cache 
 
 RUN mkdir -p /usr/src/app
 COPY . /usr/src/app/

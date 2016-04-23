@@ -5,19 +5,33 @@ set -o nounset
 
 readonly PBF_DOWNLOAD_URL=${PBF_DOWNLOAD_URL:-false}
 
-source import.sh
+readonly IMPORT_DATA_DIR=${IMPORT_DATA_DIR:-/data/import}
+readonly IMPOSM_CACHE_DIR=${IMPOSM_CACHE_DIR:-/data/cache}
+
+readonly OSM_DB=${OSM_DB:-osm}
+readonly OSM_USER=${OSM_USER:-osm}
+readonly OSM_PASSWORD=${OSM_PASSWORD:-osm}
+
+readonly DB_SCHEMA=${OSM_SCHEMA:-public}
+readonly DB_HOST=$DB_PORT_5432_TCP_ADDR
+readonly PG_CONNECT="postgis://$OSM_USER:$OSM_PASSWORD@$DB_HOST/$OSM_DB"
+
+
+function import_pbf() {
+    local pbf_file="$1"
+    echo "$pbf_file"
+
+    imposm3 import -mapping mapping.json -appendcache -cachedir="$IMPOSM_CACHE_DIR" -read "$pbf_file"
+}
+
 
 function main() {
-    if ! [ "$PBF_DOWNLOAD_URL" = false ]; then
-        download_pbf "$PBF_DOWNLOAD_URL"
-    fi
+    rm -f $IMPOSM_CACHE_DIR/*.cache
 
     if [ "$(ls -A $IMPORT_DATA_DIR/*.pbf 2> /dev/null)" ]; then
         local pbf_file
         for pbf_file in "$IMPORT_DATA_DIR"/*.pbf; do
-            drop_tables
             import_pbf "$pbf_file"
-            break
         done
     else
         echo "No PBF files for import found."
@@ -27,3 +41,6 @@ function main() {
 }
 
 main
+
+imposm3 import -mapping mapping.json -write -cachedir="$IMPOSM_CACHE_DIR" -connection=$PG_CONNECT -deployproduction
+

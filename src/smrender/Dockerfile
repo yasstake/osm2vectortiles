@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-RUN apt-get update -y && apt-get install -y xz-utils make gcc pkg-config fontconfig libcairo* libgtk2.0-dev lib2.0-dev automake autotools-dev wget emacs make unzip
+RUN apt-get update -y && apt-get install -y xz-utils make gcc pkg-config fontconfig libcairo* libgtk2.0-dev lib2.0-dev automake autotools-dev wget emacs make unzip git
 
 RUN cd /tmp && wget http://www.abenteuerland.at/download/smrender/current/smrender-4.0.r1854.tar.xz &&  xzcat smrender-4.0.r1854.tar.xz | tar xvf - && cd smrender-4.0.r1854 && sed -i -e "1i #include<glib.h>"  src/smrender_dev.h
 
@@ -15,6 +15,9 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
     add-apt-repository -y ppa:webupd8team/java && \
     apt-get update && \
     apt-get install -y oracle-java8-installer
+
+RUN cd /tmp &&  git clone https://github.com/yasstake/seafilter && cd seafilter && make && make install  
+
 
 RUN cd /tmp && wget http://bretth.dev.openstreetmap.org/osmosis-build/osmosis-latest.zip && cd /usr/local/ && unzip /tmp/osmosis-latest.zip
 ADD Makefile /

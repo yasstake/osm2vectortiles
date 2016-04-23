@@ -32,7 +32,7 @@ pgbouncer:
   ports:
    - "6432"
 import-osm:
-  image: "osm2vectortiles/import-osm"
+  build: src/import-osm
   command: ./import-pbf.sh
   volumes:
    - ./import:/data/import

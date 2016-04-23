@@ -16,6 +16,83 @@ generalized_tables:
     sql_filter: ST_Area(geometry)>1700.000000
     tolerance: 0.0
 tables:
+      light_arc: 
+      fields: 
+        - 
+          type: "id"
+          name: "osm_id"
+          key: null
+        - 
+          type: "geometry"
+          name: "geometry"
+          key: null
+        - 
+          type: "string"
+          name: "name"
+          key: "name"
+        - 
+          type: "string"
+          name: "seamark:name"
+          key: "seamark:name"
+        - 
+          type: "string"
+          name: "seamark:arc_style"
+          key: "seamark:arc_style"
+        - 
+          type: "string"
+          name: "seamark:light:sector_nr"
+          key: "seamark:light:sector_nr"
+        - 
+          type: "string"
+          name: "seamark:light_arc"
+          key: "seamark:light_arc"
+        - 
+          type: "string"
+          name: "seamark:light_radical"
+          key: "seamark:light_radical"
+        - 
+          type: "mapping_value"
+          name: "seamark:light:object"
+          key: null
+      type: "linestring"
+      mapping: 
+        seamark:light:object: 
+          - "light_minor"
+          - "light_major"
+
+    sealane: 
+      fields: 
+        - 
+          type: "id"
+          name: "osm_id"
+          key: null
+        - 
+          type: "string"
+          name: "name"
+          key: "name"
+        - 
+          type: "geometry"
+          name: "geometry"
+          key: null
+        - 
+          type: "mapping_value"
+          name: "seamark:type"
+          key: null
+      type: "linestring"
+      mapping: 
+        seamark:type: 
+          - "separation_boundary"
+          - "separation_lane"
+          - "separation_zone"
+
+
+
+
+
+
+
+
+
   admin_linestring:
     fields:
     - name: osm_id
