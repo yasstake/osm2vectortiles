@@ -1,12 +1,14 @@
 FROM ubuntu:latest
 
-RUN apt-get update -y && apt-get install -y xz-utils make gcc pkg-config fontconfig libcairo* libgtk2.0-dev lib2.0-dev automake autotools-dev wget emacs make unzip git
+RUN apt-get update -y && apt-get install -y xz-utils make gcc pkg-config fontconfig libcairo* libgtk2.0-dev lib2.0-dev automake autotools-dev wget emacs make unzip git cmake
 
 RUN cd /tmp && wget http://www.abenteuerland.at/download/smrender/current/smrender-4.0.r1854.tar.xz &&  xzcat smrender-4.0.r1854.tar.xz | tar xvf - && cd smrender-4.0.r1854 && sed -i -e "1i #include<glib.h>"  src/smrender_dev.h
 
 RUN (export LDFLAGS=-lglib-2.0;cd /tmp/smrender-4.0.r1854;./configure --;make;make install)
 
 ADD rules/rules.osm /
+
+RUN cd /tmp && git clone https://github.com/joto/osmcoastline && cd osmcoastline && mkdir build && cd build && cmake .. && make install
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 

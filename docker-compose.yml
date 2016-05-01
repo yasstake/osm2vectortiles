@@ -62,7 +62,7 @@ import-natural-earth:
   links:
   - postgis:db
 import-water:
-  image: "osm2vectortiles/import-external"
+  build: src/import-external
   command: ./import-water.sh
   links:
   - postgis:db
