@@ -61,9 +61,9 @@ import-natural-earth:
   command: ./import-natural-earth.sh
   links:
   - postgis:db
-import-water:
+import-land:
   build: src/import-external
-  command: ./import-water.sh
+  command: ./import-land.sh
   links:
   - postgis:db
 update-scaleranks:

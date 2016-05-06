@@ -8,7 +8,7 @@ RUN (export LDFLAGS=-lglib-2.0;cd /tmp/smrender-4.0.r1854;./configure --;make;ma
 
 ADD rules/rules.osm /
 
-RUN cd /tmp && git clone https://github.com/joto/osmcoastline && cd osmcoastline && mkdir build && cd build && cmake .. && make install
+#RUN cd /tmp && git clone https://github.com/joto/osmcoastline && cd osmcoastline && mkdir build && cd build && cmake .. && make install
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
@@ -18,7 +18,7 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
     apt-get update && \
     apt-get install -y oracle-java8-installer
 
-RUN cd /tmp &&  git clone https://github.com/yasstake/seafilter && cd seafilter && make && make install  
+#RUN cd /tmp &&  git clone https://github.com/yasstake/seafilter && cd seafilter && make && make install  
 
 
 RUN cd /tmp && wget http://bretth.dev.openstreetmap.org/osmosis-build/osmosis-latest.zip && cd /usr/local/ && unzip /tmp/osmosis-latest.zip

@@ -17,7 +17,8 @@ WORKDIR = $(DATADIR)/WORK
 ORGPBF=$(WORKDIR)/japan.latest.pbf
 RAWPBF=$(WORKDIR)/japan.org.pbf
 
-JAPAN_LAND_PBF=$(WORKDIR)/japan.land.pbf
+JAPAN_LAND_PBF=$(DATADIR)/japan.land.pbf
+
 JAPAN_SEA_PBF=$(WORKDIR)/japan.sea.pbf
 ORG_SEA_PBF=$(WORKDIR)/seafilter.pbf
 MERGE_SEA_OSM=$(WORKDIR)/japan.mergesea.osm
