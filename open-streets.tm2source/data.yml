@@ -6,77 +6,12 @@ _prefs:
   saveCenter: true
 attribution: ''
 center: 
-  - 8.8225
-  - 47.2334
-  - 14
-description: Open Streets
+  - 139.5744
+  - 35.3946
+  - 9
+description: ''
 Layer: 
-  - id: landuse
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: geometry
-      geometry_table: ''
-      host: db
-      key_field: osm_id
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT osm_id, geometry, classify_landuse(type) as class, type
-            FROM (
-              SELECT osm_id, geometry, type
-              FROM landuse_z5
-              WHERE z(!scale_denominator!) = 5
-              UNION ALL
-              SELECT osm_id, geometry, type
-              FROM landuse_z6
-              WHERE z(!scale_denominator!) = 6
-              UNION ALL
-              SELECT osm_id, geometry, type
-              FROM landuse_z7
-              WHERE z(!scale_denominator!) = 7
-              UNION ALL
-              SELECT osm_id, geometry, type
-              FROM landuse_z8
-              WHERE z(!scale_denominator!) = 8
-              UNION ALL
-              SELECT osm_id, geometry, type
-              FROM landuse_z9
-              WHERE z(!scale_denominator!) = 9
-              UNION ALL
-              SELECT osm_id, geometry, type
-              FROM landuse_z10
-              WHERE z(!scale_denominator!) = 10
-              UNION ALL
-              SELECT osm_id, geometry, type
-              FROM landuse_z11
-              WHERE z(!scale_denominator!) = 11
-              UNION ALL
-              SELECT osm_id, geometry, type
-              FROM landuse_z12
-              WHERE z(!scale_denominator!) = 12
-              UNION ALL
-              SELECT osm_id, geometry, type
-              FROM landuse_z13toz14
-              WHERE z(!scale_denominator!) BETWEEN 13 AND 14
-            ) AS landuse
-            WHERE geometry && !bbox!
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      class: String
-      osm_id: Number
-      type: String
-    properties: 
-      "buffer-size": 4
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: waterway
+  - id: man_madeway
     Datasource: 
       dbname: osm
       extent: -20037508.34,-20037508.34,20037508.34,20037508.34
@@ -87,113 +22,21 @@ Layer:
       key_field_as_attribute: ''
       max_size: 512
       password: osm
-      port: 5432
+      port: ''
       srid: ''
-      table: |-
-        (
-          SELECT osm_id, geometry, type, type as class
-          FROM (
-            SELECT *
-            FROM waterway_z8toz12
-            WHERE z(!scale_denominator!) BETWEEN 8 AND 12
-            UNION ALL
-            SELECT *
-            FROM waterway_z13toz14
-            WHERE z(!scale_denominator!) BETWEEN 13 AND 14
-          ) AS waterway
-          WHERE geometry && !bbox!
-        ) AS data
+      table: osm_manmade_ways
       type: postgis
       user: osm
     description: ''
     fields: 
-      class: String
+      id: Number
+      name: String
       osm_id: Number
       type: String
-    properties: 
-      "buffer-size": 4
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: water
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: ''
-      geometry_table: ''
-      host: db
-      key_field: ''
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT 0 AS osm_id, ST_SimplifyPreserveTopology(way, 200) AS geometry FROM osm_ocean_polygons
-          WHERE way && !bbox!
-            AND z(!scale_denominator!) = 0
-          UNION ALL
-          SELECT 0 AS osm_id, way AS geometry FROM osm_ocean_polygons
-          WHERE way && !bbox!
-            AND z(!scale_denominator!) BETWEEN 1 AND 14
-          UNION ALL
-          SELECT 0 AS osm_id, geom AS geometry FROM ne_110m_lakes
-          WHERE geom && !bbox!
-            AND z(!scale_denominator!) BETWEEN 0 AND 1
-          UNION ALL
-          SELECT 0 AS osm_id, geom AS geometry FROM ne_50m_lakes
-          WHERE geom && !bbox!
-            AND z(!scale_denominator!) BETWEEN 2 AND 3
-          UNION ALL
-          SELECT 0 AS osm_id, geom AS geometry FROM ne_10m_lakes
-          WHERE geom && !bbox!
-            AND z(!scale_denominator!) BETWEEN 4 AND 5
-          UNION ALL
-          SELECT osm_id, geometry FROM water_z6toz12
-          WHERE geometry && !bbox!
-          AND z(!scale_denominator!) BETWEEN 6 AND 12
-          UNION ALL
-          SELECT osm_id, geometry FROM water_z13toz14
-          WHERE geometry && !bbox!
-          AND z(!scale_denominator!) BETWEEN 13 AND 14
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      osm_id: Number
     properties: 
       "buffer-size": 8
     srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: aeroway
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: geometry
-      geometry_table: ''
-      host: db
-      key_field: ''
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT osm_id, geometry, type
-          FROM aeroway_z12toz14
-          WHERE geometry && !bbox!
-            AND z(!scale_denominator!) BETWEEN 12 AND 14
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      osm_id: Number
-      type: String
-    properties: 
-      "buffer-size": 4
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: barrier_line
+  - id: light
     Datasource: 
       dbname: osm
       extent: -20037508.34,-20037508.34,20037508.34,20037508.34
@@ -204,380 +47,40 @@ Layer:
       key_field_as_attribute: ''
       max_size: 512
       password: osm
-      port: 5432
+      port: ''
       srid: ''
-      table: |-
-        (
-          SELECT osm_id, geometry, classify_barrier_line(type) AS class
-          FROM barrier_line_z14
-          WHERE geometry && !bbox!
-            AND z(!scale_denominator!) = 14
-        ) AS data
+      table: osm_lights
       type: postgis
       user: osm
-    description: ''
+    description: light
     fields: 
-      class: String
-      osm_id: Number
-    properties: 
-      "buffer-size": 4
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: building
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: geometry
-      geometry_table: ''
-      host: db
-      key_field: osm_id
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT osm_id, geometry
-          FROM (
-            SELECT osm_id, geometry
-            FROM building_z13
-            WHERE z(!scale_denominator!) = 13
-            UNION ALL
-            SELECT osm_id, geometry
-            FROM building_z14
-            WHERE z(!scale_denominator!) = 14
-          ) AS building
-          WHERE geometry && !bbox!
-          ORDER BY ST_YMin(ST_Envelope(geometry)) DESC
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      osm_id: Number
-    properties: 
-      "buffer-size": 2
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: landuse_overlay
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: geometry
-      geometry_table: ''
-      host: db
-      key_field: osm_id
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT osm_id, geometry, classify_landuse_overlay(type) AS class
-          FROM (
-            SELECT osm_id, geometry, type FROM landuse_overlay_z7
-            WHERE z(!scale_denominator!) = 7
-            UNION ALL
-            SELECT osm_id, geometry, type FROM landuse_overlay_z8
-            WHERE z(!scale_denominator!) = 8
-            UNION ALL
-            SELECT osm_id, geometry, type FROM landuse_overlay_z9
-            WHERE z(!scale_denominator!) = 9
-            UNION ALL
-            SELECT osm_id, geometry, type FROM landuse_overlay_z10
-            WHERE z(!scale_denominator!) = 10
-            UNION ALL
-            SELECT osm_id, geometry, type FROM landuse_overlay_z11toz12
-            WHERE z(!scale_denominator!) BETWEEN 11 AND 12
-            UNION ALL
-            SELECT osm_id, geometry, type FROM landuse_overlay_z13toz14
-            WHERE z(!scale_denominator!) BETWEEN 13 AND 14
-          ) AS landuse_overlay
-          WHERE geometry && !bbox!
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      class: String
-      osm_id: Number
-    properties: 
-      "buffer-size": 4
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: tunnel
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: geometry
-      geometry_table: ''
-      host: db
-      key_field: osm_id
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT osm_id, geometry, classify_road(type) AS class, type, layer, oneway
-          FROM tunnel_z12toz14
-          WHERE z(!scale_denominator!) BETWEEN 12 AND 14
-            AND geometry && !bbox!
-          ORDER BY layer ASC
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      class: String
-      layer: Number
-      oneway: Number
-      osm_id: Number
-      type: String
-    properties: 
-      "buffer-size": 4
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: road
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: geometry
-      geometry_table: ''
-      host: db
-      key_field: osm_id
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT osm_id, geometry, type, classify_road_railway(type, service) AS class, oneway
-          FROM (
-            SELECT * FROM road_z5toz6
-            WHERE z(!scale_denominator!) BETWEEN 5 AND 6
-            UNION ALL
-            SELECT * FROM road_z7
-            WHERE z(!scale_denominator!) = 7
-            UNION ALL
-            SELECT * FROM road_z8toz10
-            WHERE z(!scale_denominator!) BETWEEN 8 AND 10
-            UNION ALL
-            SELECT * FROM road_z11
-            WHERE z(!scale_denominator!) = 11
-            UNION ALL
-            SELECT * FROM road_z12
-            WHERE z(!scale_denominator!) = 12
-            UNION ALL
-            SELECT * FROM road_z13
-            WHERE z(!scale_denominator!) = 13
-            UNION ALL
-            SELECT * FROM road_z14
-            WHERE z(!scale_denominator!) = 14
-          ) AS road
-          WHERE geometry && !bbox!
-          ORDER BY z_order ASC
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      class: String
-      oneway: Number
-      osm_id: Number
-      type: String
-    properties: 
-      "buffer-size": 4
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: bridge
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: geometry
-      geometry_table: ''
-      host: db
-      key_field: osm_id
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT osm_id, geometry, classify_road(type) AS class, type, layer, oneway
-          FROM bridge_z12toz14
-          WHERE z(!scale_denominator!) BETWEEN 12 AND 14
-            AND geometry && !bbox!
-          ORDER BY layer ASC
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      class: String
-      layer: Number
-      oneway: Number
-      osm_id: Number
-      type: String
-    properties: 
-      "buffer-size": 4
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: admin
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: ''
-      geometry_table: ''
-      host: db
-      key_field: ''
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT 0 AS osm_id, geom, 2 AS admin_level, 0 AS disputed, 0 AS maritime
-          FROM ne_110m_admin_0_boundary_lines_land
-          WHERE z(!scale_denominator!) BETWEEN 0 AND 2
-            AND geom && !bbox!
-          UNION ALL
-          SELECT 0 AS osm_id, geom, 2 AS admin_level, 0 AS disputed, 0 AS maritime
-          FROM ne_50m_admin_0_boundary_lines_land
-          WHERE z(!scale_denominator!) = 3
-            AND geom && !bbox!
-          UNION ALL
-          SELECT 0 AS osm_id, geom, 2 AS admin_level, 0 AS disputed, 0 AS maritime
-          FROM ne_10m_admin_0_boundary_lines_land
-          WHERE z(!scale_denominator!) BETWEEN 4 AND 6
-            AND geom && !bbox!
-          UNION ALL
-          SELECT osm_id, geometry, admin_level, 0 AS disputed, maritime
-          FROM admin_z2toz6
-          WHERE z(!scale_denominator!) BETWEEN 2 AND 6
-            AND geometry && !bbox!
-          UNION ALL
-          SELECT 0 AS osm_id, geom, 4 AS admin_level, 0 AS disputed, 0 AS maritime
-          FROM ne_50m_admin_1_states_provinces_lines
-          WHERE z(!scale_denominator!) = 1
-            AND scalerank = 2
-            AND geom && !bbox!
-          UNION ALL
-          SELECT 0 AS osm_id, geom, 4 AS admin_level, 0 AS disputed, 0 AS maritime
-          FROM ne_10m_admin_1_states_provinces_lines_shp
-          WHERE z(!scale_denominator!) BETWEEN 2 AND 6
-            AND scalerank = 2
-            AND geom && !bbox!
-          UNION ALL
-          SELECT 0 AS osm_id, geom, 4 AS admin_level, 0 AS disputed, 0 AS maritime
-          FROM ne_10m_admin_1_states_provinces_lines_shp
-          WHERE z(!scale_denominator!) BETWEEN 4 AND 6
-            AND scalerank BETWEEN 3 AND 6
-            AND geom && !bbox!
-          UNION ALL
-          SELECT 0 AS osm_id, geom, 4 AS admin_level, 0 AS disputed, 0 AS maritime
-          FROM ne_10m_admin_1_states_provinces_lines_shp
-          WHERE z(!scale_denominator!) = 6
-            AND scalerank BETWEEN 7 AND 9
-            AND geom && !bbox!
-          UNION ALL
-          SELECT osm_id, geometry, admin_level, 0 AS disputed, maritime
-          FROM admin_z7toz14
-          WHERE z(!scale_denominator!) BETWEEN 7 AND 14
-            AND geometry && !bbox!
-          UNION ALL
-          SELECT 0 AS osm_id, geom, 2 AS admin_level, 1 AS disputed, 0 AS maritime
-          FROM ne_10m_admin_0_boundary_lines_disputed_areas
-          WHERE z(!scale_denominator!) BETWEEN 7 AND 14
-            AND geom && !bbox!
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      admin_level: Number
-      disputed: Number
-      maritime: Number
-      osm_id: Number
-    properties: 
-      "buffer-size": 4
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: country_label
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: wkb_geometry
-      geometry_table: ''
-      host: db
-      key_field: ''
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT osm_id, wkb_geometry,
-          iso3166_1_alpha_2 as code,
-          name,
-          coalesce(NULLIF(name_en, ''), name) AS name_en,
-          coalesce(NULLIF(name_es, ''), name) AS name_es,
-          coalesce(NULLIF(name_fr, ''), name) AS name_fr,
-          coalesce(NULLIF(name_de, ''), name) AS name_de,
-          coalesce(NULLIF(name_ru, ''), name) AS name_ru,
-          coalesce(NULLIF(name_zh, ''), name) AS name_zh, 
-          rank as scalerank
-          FROM custom_countries
-          WHERE (
-            (
-              rank <= 1
-              AND z(!scale_denominator!) = 1 AND wkb_geometry && !bbox!
-            )
-            OR
-            (
-              rank <= 2
-              AND z(!scale_denominator!) >= 2 AND wkb_geometry && !bbox!
-            )
-            OR
-            (
-              rank <= 4
-              AND z(!scale_denominator!) >= 3 AND wkb_geometry && !bbox!
-            )
-            OR
-            (
-              rank <= 5
-              AND z(!scale_denominator!) >= 4 AND wkb_geometry && !bbox!
-            )
-            OR
-            (
-              rank <= 6
-              AND z(!scale_denominator!) >= 5 AND wkb_geometry && !bbox!
-            )
-            OR
-            (
-              rank >= 7
-              AND z(!scale_denominator!) >= 6 AND wkb_geometry && !bbox!
-            )
-          )
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      code: String
+      id: Number
       name: String
-      name_de: String
-      name_en: String
-      name_es: String
-      name_fr: String
-      name_ru: String
-      name_zh: String
       osm_id: Number
-      scalerank: Number
+      "seamark:fixme": String
+      "seamark:light:category": String
+      "seamark:light:colour": String
+      "seamark:light:group": String
+      "seamark:light:height": String
+      "seamark:light:multiple": String
+      "seamark:light:period": String
+      "seamark:light:range": String
+      "seamark:light:sequence": String
+      "seamark:light_character": String
+      "seamark:light_float:colour": String
+      "seamark:light_float:colour_pattern": String
+      "seamark:light_float:name": String
+      "seamark:light_vessel:colour": String
+      "seamark:light_vessel:colour_pattern": String
+      "seamark:light_vessel:name": String
+      "seamark:name": String
+      "seamark:topmark:colour": String
+      "seamark:topmark:shape": String
+      type: String
     properties: 
-      "buffer-size": 256
+      "buffer-size": 8
     srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: marine_label
+  - id: land_polygon
     Datasource: 
       dbname: osm
       extent: -20037508.34,-20037508.34,20037508.34,20037508.34
@@ -588,61 +91,19 @@ Layer:
       key_field_as_attribute: ''
       max_size: 512
       password: osm
-      port: 5432
+      port: ''
       srid: ''
-      table: |-
-        (
-          SELECT osm_id, wkb_geometry,
-          name,
-          coalesce(NULLIF(name_en, ''), name) AS name_en,
-          coalesce(NULLIF(name_es, ''), name) AS name_es,
-          coalesce(NULLIF(name_fr, ''), name) AS name_fr,
-          coalesce(NULLIF(name_de, ''), name) AS name_de,
-          coalesce(NULLIF(name_ru, ''), name) AS name_ru,
-          coalesce(NULLIF(name_zh, ''), name) AS name_zh, 
-          case when GeometryType(wkb_geometry) = 'LINESTRING' then 'line'
-               else 'POINT' end as placement,
-          rank AS labelrank
-          FROM custom_seas
-          WHERE wkb_geometry && !bbox! AND (
-            (
-              rank = 1 AND z(!scale_denominator!) >= 1
-            )
-            OR (
-              rank = 2 AND z(!scale_denominator!) >= 2
-            )
-            OR (
-              rank = 3 AND z(!scale_denominator!) >= 3
-            )
-            OR (
-              rank = 4 AND z(!scale_denominator!) >= 4
-            )
-            OR (
-              rank = 5 AND z(!scale_denominator!) >= 5
-            )
-            OR (
-              rank = 6 AND z(!scale_denominator!) >= 6
-            )
-          )
-        ) AS data
+      table: osm_land_polygons
       type: postgis
       user: osm
     description: ''
     fields: 
-      labelrank: Number
-      name: String
-      name_de: String
-      name_en: String
-      name_es: String
-      name_fr: String
-      name_ru: String
-      name_zh: String
-      osm_id: String
-      placement: String
+      fid: Number
+      gid: Number
     properties: 
-      "buffer-size": 256
+      "buffer-size": 8
     srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: state_label
+  - id: waterarea
     Datasource: 
       dbname: osm
       extent: -20037508.34,-20037508.34,20037508.34,20037508.34
@@ -653,358 +114,22 @@ Layer:
       key_field_as_attribute: ''
       max_size: 512
       password: osm
-      port: 5432
+      port: ''
       srid: ''
-      table: |-
-        (
-          SELECT osm_id, wkb_geometry, abbr,
-          area_sqkm as area,
-          name,
-          coalesce(NULLIF(name_en, ''), name) AS name_en,
-          coalesce(NULLIF(name_es, ''), name) AS name_es,
-          coalesce(NULLIF(name_fr, ''), name) AS name_fr,
-          coalesce(NULLIF(name_de, ''), name) AS name_de,
-          coalesce(NULLIF(name_ru, ''), name) AS name_ru,
-          coalesce(NULLIF(name_zh, ''), name) AS name_zh
-          FROM custom_states
-          WHERE wkb_geometry && !bbox! AND (
-            (
-              area_sqkm > 90000 AND z(!scale_denominator!) >= 4
-            )
-            OR (
-              z(!scale_denominator!) >= 5
-            )
-          )
-        ) AS states
+      table: osm_waterareas
       type: postgis
       user: osm
     description: ''
     fields: 
-      abbr: String
+      id: Number
       area: Number
       name: String
-      name_de: String
-      name_en: String
-      name_es: String
-      name_fr: String
-      name_ru: String
-      name_zh: String
-      osm_id: Number
-    properties: 
-      "buffer-size": 256
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: place_label
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: geometry
-      geometry_table: ''
-      host: db
-      key_field: ''
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-        SELECT osm_id, geometry,  
-        name,
-        coalesce(NULLIF(name_en, ''), name) AS name_en,
-        coalesce(NULLIF(name_es, ''), name) AS name_es,
-        coalesce(NULLIF(name_fr, ''), name) AS name_fr,
-        coalesce(NULLIF(name_de, ''), name) AS name_de,
-        coalesce(NULLIF(name_ru, ''), name) AS name_ru,
-        coalesce(NULLIF(name_zh, ''), name) AS name_zh, 
-        type,
-        CASE WHEN is_capital THEN 1 ELSE NULL END AS capital,
-        NULL AS ldir,
-        normalize_scalerank(scalerank) AS scalerank,
-        rank() OVER (PARTITION BY LabelGrid(geometry, 200 * !pixel_width!)
-                     ORDER BY scalerank ASC NULLS LAST,
-                              population DESC NULLS LAST
-        ) AS localrank
-        FROM (
-            SELECT * FROM place_label_z4toz5
-            WHERE z(!scale_denominator!) BETWEEN 4 AND 5
-            UNION ALL
-            SELECT * FROM place_label_z6
-            WHERE z(!scale_denominator!) = 6
-            UNION ALL
-            SELECT * FROM place_label_z7
-            WHERE z(!scale_denominator!) = 7
-            UNION ALL
-            SELECT * FROM place_label_z8
-            WHERE z(!scale_denominator!) = 8
-            UNION ALL
-            SELECT * FROM place_label_z9toz10
-            WHERE z(!scale_denominator!) BETWEEN 9 AND 10
-            UNION ALL
-            SELECT * FROM place_label_z11toz12
-            WHERE z(!scale_denominator!) BETWEEN 11 AND 12
-            UNION ALL
-            SELECT * FROM place_label_z13
-            WHERE z(!scale_denominator!) = 13
-            UNION ALL
-            SELECT * FROM place_label_z14
-            WHERE z(!scale_denominator!) = 14
-          ) AS place_label
-        WHERE geometry && !bbox!
-        ORDER BY population DESC NULLS LAST
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      capital: String
-      ldir: String
-      localrank: Number
-      name: String
-      name_de: String
-      name_en: String
-      name_es: String
-      name_fr: String
-      name_ru: String
-      name_zh: String
-      osm_id: Number
-      scalerank: String
-      type: String
-    properties: 
-      "buffer-size": 128
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: water_label
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: ''
-      geometry_table: ''
-      host: db
-      key_field: ''
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT geometry, osm_id,
-          name,
-          area,
-          coalesce(NULLIF(name_en, ''), name) AS name_en,
-          coalesce(NULLIF(name_es, ''), name) AS name_es,
-          coalesce(NULLIF(name_fr, ''), name) AS name_fr,
-          coalesce(NULLIF(name_de, ''), name) AS name_de,
-          coalesce(NULLIF(name_ru, ''), name) AS name_ru,
-          coalesce(NULLIF(name_zh, ''), name) AS name_zh
-          FROM (
-            SELECT * FROM water_label_z10
-            WHERE z(!scale_denominator!) = 10
-            UNION ALL
-            SELECT * FROM water_label_z11
-            WHERE z(!scale_denominator!) = 11
-            UNION ALL
-            SELECT * FROM water_label_z12
-            WHERE z(!scale_denominator!) = 12
-            UNION ALL
-            SELECT * FROM water_label_z13
-            WHERE z(!scale_denominator!) = 13
-            UNION ALL
-            SELECT * FROM water_label_z14
-            WHERE z(!scale_denominator!) = 14
-          ) AS water_label
-          WHERE geometry && !bbox!
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      area: Number
-      name: String
-      name_de: String
-      name_en: String
-      name_es: String
-      name_fr: String
-      name_ru: String
-      name_zh: String
-      osm_id: Number
-    properties: 
-      "buffer-size": 64
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: poi_label
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: ''
-      geometry_table: ''
-      host: db
-      key_field: ''
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT geometry, osm_id, ref, website,
-              poi_network(type) as network,
-              poi_address(housenumber, street, place, city, country, postcode) as address,
-              name,
-              coalesce(NULLIF(name_en, ''), name) AS name_en,
-              coalesce(NULLIF(name_es, ''), name) AS name_es,
-              coalesce(NULLIF(name_fr, ''), name) AS name_fr,
-              coalesce(NULLIF(name_de, ''), name) AS name_de,
-              coalesce(NULLIF(name_ru, ''), name) AS name_ru,
-              coalesce(NULLIF(name_zh, ''), name) AS name_zh,
-              format_type(type) AS type,
-              scalerank_poi(type, area) AS scalerank,
-              classify_maki_label(type) AS maki,
-              rank() OVER (PARTITION BY LabelGrid(geometry, 128 * !pixel_width!)
-                           ORDER BY localrank_poi(type) ASC) AS localrank
-            FROM poi_label_z14
-            WHERE z(!scale_denominator!) = 14
-              AND geometry && !bbox!
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      address: String
-      localrank: Number
-      maki: String
-      name: String
-      name_de: String
-      name_en: String
-      name_es: String
-      name_fr: String
-      name_ru: String
-      name_zh: String
-      network: String
-      osm_id: Number
-      ref: String
-      scalerank: Number
-      type: String
-      website: String
-    properties: 
-      "buffer-size": 128
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: road_label
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: geometry
-      geometry_table: ''
-      host: db
-      key_field: ''
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT geometry, osm_id, name,
-            coalesce(NULLIF(name_en, ''), name) AS name_en,
-            coalesce(NULLIF(name_es, ''), name) AS name_es,
-            coalesce(NULLIF(name_fr, ''), name) AS name_fr,
-            coalesce(NULLIF(name_de, ''), name) AS name_de,
-            coalesce(NULLIF(name_ru, ''), name) AS name_ru,
-            coalesce(NULLIF(name_zh, ''), name) AS name_zh,
-            nullif(ref, '') AS ref,
-            nullif(char_length(ref), 0) AS reflen,
-            round(MercLength(geometry)) as len,
-            classify_road(type) as class,
-            'default' as shield,
-            rank() OVER (
-                PARTITION BY LabelGrid(geometry, 200 * !pixel_width!)
-                ORDER BY localrank_road(type) ASC, round(MercLength(geometry)) DESC
-            ) AS localrank
-            FROM (
-              SELECT * FROM road_label_z8toz10
-              WHERE z(!scale_denominator!) BETWEEN 8 AND 10
-              UNION ALL
-              SELECT * FROM road_label_z11
-              WHERE z(!scale_denominator!) = 11
-              UNION ALL
-              SELECT * FROM road_label_z12toz13
-              WHERE z(!scale_denominator!) BETWEEN 12 AND 13
-              UNION ALL
-              SELECT * FROM road_label_z14
-              WHERE z(!scale_denominator!) = 14
-            ) AS road_label
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      class: String
-      len: Number
-      localrank: Number
-      name: String
-      name_de: String
-      name_en: String
-      name_es: String
-      name_fr: String
-      name_ru: String
-      name_zh: String
-      osm_id: Number
-      ref: String
-      reflen: Number
-      shield: String
-    properties: 
-      "buffer-size": 8
-    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: waterway_label
-    Datasource: 
-      dbname: osm
-      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
-      geometry_field: geometry
-      geometry_table: ''
-      host: db
-      key_field: ''
-      key_field_as_attribute: ''
-      max_size: 512
-      password: osm
-      port: 5432
-      srid: ''
-      table: |-
-        (
-          SELECT geometry, osm_id,
-          name,
-          coalesce(NULLIF(name_en, ''), name) AS name_en,
-          coalesce(NULLIF(name_es, ''), name) AS name_es,
-          coalesce(NULLIF(name_fr, ''), name) AS name_fr,
-          coalesce(NULLIF(name_de, ''), name) AS name_de,
-          coalesce(NULLIF(name_ru, ''), name) AS name_ru,
-          coalesce(NULLIF(name_zh, ''), name) AS name_zh,
-          type, type as class
-          FROM (
-            SELECT * FROM waterway_label_z8toz12
-            WHERE z(!scale_denominator!) BETWEEN 8 AND 12
-            UNION ALL
-            SELECT * FROM waterway_label_z13toz14
-            WHERE z(!scale_denominator!) BETWEEN 13 AND 14
-          ) AS waterway_label
-          WHERE geometry && !bbox!
-          AND linelabel(z(!scale_denominator!), name, geometry)
-        ) AS data
-      type: postgis
-      user: osm
-    description: ''
-    fields: 
-      class: String
-      name: String
-      name_de: String
-      name_en: String
-      name_es: String
-      name_fr: String
-      name_ru: String
-      name_zh: String
       osm_id: Number
       type: String
     properties: 
       "buffer-size": 8
     srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-  - id: housenum_label
+  - id: sealane
     Datasource: 
       dbname: osm
       extent: -20037508.34,-20037508.34,20037508.34,20037508.34
@@ -1015,24 +140,181 @@ Layer:
       key_field_as_attribute: ''
       max_size: 512
       password: osm
-      port: 5432
+      port: ''
       srid: ''
-      table: |-
-        (
-          SELECT osm_id, topoint(geometry) AS geometry, house_num
-          FROM housenum_label_z14
-          WHERE geometry && !bbox!
-            AND z(!scale_denominator!) = 14
-        ) AS data
+      table: osm_sealane
       type: postgis
       user: osm
     description: ''
     fields: 
-      house_num: String
+      id: Number
+      name: String
       osm_id: Number
+      type: String
     properties: 
-      "buffer-size": 64
+      "buffer-size": 12
     srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
-maxzoom: 14
+  - id: light_arc
+    Datasource: 
+      dbname: osm
+      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
+      geometry_field: ''
+      geometry_table: ''
+      host: db
+      key_field: ''
+      key_field_as_attribute: ''
+      max_size: 512
+      password: osm
+      port: ''
+      srid: ''
+      table: osm_light_arc
+      type: postgis
+      user: osm
+    description: ''
+    fields: 
+      id: Number
+      name: String
+      osm_id: Number
+      "seamark:arc_style": String
+      "seamark:light:object": String
+      "seamark:light:sector_nr": String
+      "seamark:light_arc": String
+      "seamark:light_character": String
+      "seamark:light_radial": Number
+      type: String
+    properties: 
+      "buffer-size": 8
+    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
+  - id: beacon
+    Datasource: 
+      dbname: osm
+      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
+      geometry_field: ''
+      geometry_table: ''
+      host: db
+      key_field: ''
+      key_field_as_attribute: ''
+      max_size: 512
+      password: osm
+      port: ''
+      srid: ''
+      table: osm_beacons
+      type: postgis
+      user: osm
+    description: ''
+    fields: 
+      id: Number
+      name: String
+      osm_id: Number
+      "seamark:beacon_cardinal:category": String
+      "seamark:beacon_cardinal:colour": String
+      "seamark:beacon_cardinal:colour:pattern": String
+      "seamark:beacon_cardinal:shape": String
+      "seamark:beacon_lateral:category": String
+      "seamark:beacon_lateral:colour": String
+      "seamark:beacon_lateral:colour:pattern": String
+      "seamark:beacon_lateral:shape": String
+      "seamark:beacon_safe_water:category": String
+      "seamark:beacon_safe_water:colour": String
+      "seamark:beacon_safe_water:colour:pattern": String
+      "seamark:beacon_safe_water:shape": String
+      "seamark:beacon_special_purpose:colour": String
+      "seamark:beacon_special_purpose:shape": String
+      "seamark:fixme": String
+      "seamark:isolated_danger:colour": String
+      "seamark:isolated_danger:colour:pattern": String
+      "seamark:isolated_danger:shape": String
+      "seamark:light:colour": String
+      "seamark:light_character": String
+      "seamark:name": String
+      "seamark:radar_reflector": String
+      "seamark:topmark:colour": String
+      "seamark:topmark:shape": String
+      type: String
+    properties: 
+      "buffer-size": 8
+    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
+  - id: buoy
+    Datasource: 
+      dbname: osm
+      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
+      geometry_field: ''
+      geometry_table: ''
+      host: db
+      key_field: ''
+      key_field_as_attribute: ''
+      max_size: 512
+      password: osm
+      port: ''
+      srid: ''
+      table: osm_buoys
+      type: postgis
+      user: osm
+    description: ''
+    fields: 
+      id: Number
+      name: String
+      osm_id: Number
+      "seamark:buoy_cardinal:category": String
+      "seamark:buoy_cardinal:colour": String
+      "seamark:buoy_cardinal:colour_pattern": String
+      "seamark:buoy_cardinal:shape": String
+      "seamark:buoy_installation:category": String
+      "seamark:buoy_installation:colour": String
+      "seamark:buoy_installation:colour_pattern": String
+      "seamark:buoy_installation:shape": String
+      "seamark:buoy_isolated_danger:category": String
+      "seamark:buoy_isolated_danger:colour": String
+      "seamark:buoy_isolated_danger:colour_pattern": String
+      "seamark:buoy_isolated_danger:shape": String
+      "seamark:buoy_lateral:category": String
+      "seamark:buoy_lateral:colour": String
+      "seamark:buoy_lateral:colour_pattern": String
+      "seamark:buoy_lateral:shape": String
+      "seamark:buoy_safe_water:colour": String
+      "seamark:buoy_safe_water:colour_pattern": String
+      "seamark:buoy_safe_water:shape": String
+      "seamark:buoy_special_purpose:colour": String
+      "seamark:buoy_special_purpose:shape": String
+      "seamark:fixme": String
+      "seamark:light:colour": String
+      "seamark:light_character": String
+      "seamark:name": String
+      "seamark:radar_reflector": String
+      "seamark:seamark:buoy_installation:category": String
+      "seamark:topmark:colour": String
+      "seamark:topmark:shape": String
+      type: String
+    properties: 
+      "buffer-size": 8
+    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
+  - id: marinefarm
+    Datasource: 
+      dbname: osm
+      extent: -20037508.34,-20037508.34,20037508.34,20037508.34
+      geometry_field: ''
+      geometry_table: ''
+      host: db
+      key_field: ''
+      key_field_as_attribute: ''
+      max_size: 512
+      password: osm
+      port: ''
+      srid: ''
+      table: osm_marinefarm
+      type: postgis
+      user: osm
+    description: ''
+    fields: 
+      id: Number
+      "KSJ2:fish_right:product": String
+      name: String
+      osm_id: Number
+      "seamark:marine_farm:category": String
+      type: String
+    properties: 
+      "buffer-size": 8
+    srs: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over
+maxzoom: 16
 minzoom: 0
-name: Open Streets
+name: ''
