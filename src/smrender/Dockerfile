@@ -20,6 +20,7 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
 
 #RUN cd /tmp &&  git clone https://github.com/yasstake/seafilter && cd seafilter && make && make install  
 
+RUN wget -O - http://m.m.i24.cc/osmconvert.c | cc -x c - -lz -O3 -o /bin/osmconvert
 
 RUN cd /tmp && wget http://bretth.dev.openstreetmap.org/osmosis-build/osmosis-latest.zip && cd /usr/local/ && unzip /tmp/osmosis-latest.zip
 ADD Makefile /
