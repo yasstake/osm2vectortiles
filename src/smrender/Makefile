@@ -1,29 +1,58 @@
-.PHONY: all
+#
+#	japan.latest.pbf
+#		-> japan.land.pbf
+#		-> japan.sea.osm
+#
+#	japan.sea.osm + /ORG/japan.sea.osm -> sea.osm -> smfilter -> sea.pbf
+#	
+#	imposm land.pbf
+#	imposm sea.pbf
+#
+#
 
-all: postgis export-mbtiles import-osm import-external import-sql update-scaleranks create-extracts changed-tiles
+DATADIR=/import/
 
-fast: postgis export-mbtiles import-osm import-sql update-scaleranks create-extracts changed-tiles
+WORKDIR = $(DATADIR)/WORK
 
-postgis:
-	docker build -t osm2vectortiles/postgis src/postgis
+ORGPBF=$(WORKDIR)/japan.latest.pbf
+RAWPBF=$(WORKDIR)/japan.org.pbf
 
-export-mbtiles:
-	docker build -t osm2vectortiles/export src/export
+JAPAN_LAND_PBF=$(DATADIR)/japan.land.pbf
 
-import-osm:
-	docker build -t osm2vectortiles/import-osm src/import-osm
+JAPAN_SEA_PBF=$(WORKDIR)/japan.sea.pbf
+ORG_SEA_PBF=$(WORKDIR)/seafilter.pbf
+MERGE_SEA_OSM=$(WORKDIR)/japan.mergesea.osm
+JAPAN_FILTER_OSM=$(WORKDIR)/japan.mergefilter.osm
+FISH_RIGHT_OSM=$(WORKDIR)/fish.osm
 
-import-external:
-	docker build -t osm2vectortiles/import-external src/import-external
+FISH_RIGHT_PBF=$(DATADIR)/fish.pbf
+JAPAN_FILTER_PBF=$(DATADIR)/japan.mergefilter.pbf
 
-import-sql:
-	docker build -t osm2vectortiles/import-sql src/import-sql
+all: $(JAPAN_FILTER_PBF) $(FISH_RIGHT_PBF) $(WORKDIR) 
 
-update-scaleranks:
-	docker build -t osm2vectortiles/update-scaleranks src/update-scaleranks
+$(WORKDIR):
+	mkdir -p $(WORKDIR)
 
-create-extracts:
-	docker build -t osm2vectortiles/create-extracts tools/create-extracts
+$(ORGPBF):
+	wget  http://download.geofabrik.de/asia/japan-latest.osm.pbf -O $(ORGPBF)
 
-changed-tiles:
-	docker build -t osm2vectortiles/changed-tiles src/changed-tiles
+$(RAWPBF).osm: $(ORGPBF) 
+	osmosis --read-pbf $(ORGPBF) --bounding-box bottom=35 top=36 left=139 right=140 --write-pbf $(RAWPBF).osm
+
+alldata: $(ORGPBF)
+	cp $(ORGPBF) $(RAWPBF)
+
+
+$(JAPAN_FILTER_PBF): $(RAWPBF).osm
+#	osmosis --read-pbf file=$(RAWPBF) --write-xml file=-  
+	smrender -i $(RAWPBF).osm -r /rules.osm -G -M -w $(JAPAN_FILTER_PBF).osm
+	osmosis --read-xml file=$(JAPAN_FILTER_PBF).osm --write-pbf file=$(JAPAN_FILTER_PBF)
+
+$(FISH_RIGHT_OSM):
+	wget https://github.com/yasstake/ksj2osm/raw/master/fish.osm -O $(FISH_RIGHT_OSM)
+
+
+$(FISH_RIGHT_PBF): $(FISH_RIGHT_OSM)
+#	python ../ksj2osm/fish.py $(FISH_RIGHT_KJS2) $(FISH_RIGHT_OSM)
+	osmosis --read-xml file=$(FISH_RIGHT_OSM) --write-pbf $(FISH_RIGHT_PBF)
+
