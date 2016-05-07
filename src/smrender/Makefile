@@ -10,7 +10,7 @@
 #
 #
 
-DATADIR=/import/
+DATADIR=/import
 
 WORKDIR = $(DATADIR)/WORK
 
@@ -28,16 +28,16 @@ FISH_RIGHT_OSM=$(WORKDIR)/fish.osm
 FISH_RIGHT_PBF=$(DATADIR)/fish.pbf
 JAPAN_FILTER_PBF=$(DATADIR)/japan.mergefilter.pbf
 
-all: $(JAPAN_FILTER_PBF) $(FISH_RIGHT_PBF) $(WORKDIR) 
+all: $(JAPAN_FILTER_PBF) $(FISH_RIGHT_PBF) $(WORKDIR)
 
 $(WORKDIR):
 	mkdir -p $(WORKDIR)
 
-$(ORGPBF):
+download-pbf: $(WORKDIR)
 	wget  http://download.geofabrik.de/asia/japan-latest.osm.pbf -O $(ORGPBF)
 
-$(RAWPBF).osm: $(ORGPBF) 
-	osmosis --read-pbf $(ORGPBF) --bounding-box bottom=35 top=36 left=139 right=140 --write-pbf $(RAWPBF).osm
+$(RAWPBF).osm: 
+	osmosis --read-pbf $(ORGPBF) --bounding-box bottom=35 top=36 left=139 right=140 --write-xml file=$(RAWPBF).osm
 
 alldata: $(ORGPBF)
 	cp $(ORGPBF) $(RAWPBF)
