@@ -3,7 +3,7 @@ FROM ubuntu
 RUN apt-get update
 RUN apt-get install -y build-essential python-dev protobuf-compiler \
                       libprotobuf-dev libtokyocabinet-dev python-psycopg2 \
-		                            libgeos-c1 python-pip
+		                            libgeos-c1v5 python-pip
 
 RUN pip install imposm
 
